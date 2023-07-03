@@ -130,7 +130,7 @@ namespace Business.Concrete
         }
 
         [ValidationAspect(typeof(ShipUpdateValidation))]
-        public async Task<IResult> UpdateShip([FromBody]Ship ship)
+        public async Task<IResult> UpdateShip([FromBody]Ship ship, int id)
         {
             ApplicationUser? user = await CurrentUser.GetCurrentUser(_userManager);
             Broker? usersBroker = _brokerDal.Get(b => b.BrokerId == user.Id || b.AssistantId == user.Id);
