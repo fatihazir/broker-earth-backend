@@ -30,9 +30,11 @@
     <Folder Include="Entities\DTOs\" />
     <Folder Include="Utilities\Constants\" />
     <Folder Include="Utilities\Security\JWT\" />
+    <Folder Include="DataAccess\Predicate\" />
   </ItemGroup>
 
   <ItemGroup>
     <None Remove="Utilities\Constants\" />
+    <None Remove="DataAccess\Predicate\" />
   </ItemGroup>
 </Project>

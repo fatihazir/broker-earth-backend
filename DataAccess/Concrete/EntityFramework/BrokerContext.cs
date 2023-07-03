@@ -16,6 +16,9 @@ namespace DataAccess.Concrete.EntityFramework
         public DbSet<Load> Loads { get; set; }
         public DbSet<Match> Matches { get; set; }
         public DbSet<AspNetUser> AspNetUsers { get; set; }
+        public DbSet<ContactUsForm> ContactUsForms { get; set; }
+
+
     }
 }
 

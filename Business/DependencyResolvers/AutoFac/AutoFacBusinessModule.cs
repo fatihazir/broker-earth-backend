@@ -34,6 +34,9 @@ namespace Business.DependencyResolvers.AutoFac
             builder.RegisterType<UserManager>().As<IUserService>();
             builder.RegisterType<EfAspNetUserDal>().As<IAspNetUserDal>();
 
+            builder.RegisterType<ContactUsFormManager>().As<IContactUsFormService>();
+            builder.RegisterType<EfContactUsFormDal>().As<IContactUsFormDal>();
+
             var assembly = System.Reflection.Assembly.GetExecutingAssembly();
 
             builder.RegisterAssemblyTypes(assembly).AsImplementedInterfaces()
