@@ -26,10 +26,16 @@ namespace Core.Extensions
             try
             {
                 await _next(httpContext);
+
                 if(httpContext.Response.StatusCode == 401)
                 {
                     await HandleCustomNotAuth(httpContext);
                 }
+                //else if(httpContext.Response.StatusCode == 400)
+                //{
+                //    await HandleCustomValidationError(httpContext);
+                //}
+                
             }
             catch (Exception e)
             {
@@ -97,7 +103,7 @@ namespace Core.Extensions
 
         private Task HandleCustomValidationError(HttpContext httpContext)
         {
-            return httpContext.Response.WriteAsync(new ErrorDetails(Messages.AuthorizationDenied)
+            return httpContext.Response.WriteAsync(new ErrorDetails(httpContext.Response.ToString())
             {
                 StatusCode = httpContext.Response.StatusCode
 
