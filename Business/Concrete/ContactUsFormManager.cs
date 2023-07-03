@@ -29,9 +29,6 @@ namespace Business.Concrete
         [ValidationAspect(typeof(ContactUsFormValidation))]
         public async Task<IResult> AddContactUsForm(ContactUsForm contactUsForm)
         {
-            contactUsForm.IsDeleted = false;
-            contactUsForm.CreatedAt = DateTime.Now;
-
             _contactUsFormDal.Add(contactUsForm);
 
             return new SuccessResult("Thank you for your interest. We will back to you soon!");
@@ -73,7 +70,7 @@ namespace Business.Concrete
                 return new SuccessDataResult<List<ContactUsForm>>(_contactUsFormDal.GetAll(dbFilter));
             }
 
-            var pageResults = 2f;
+            var pageResults = 5f;
             var pageCount = Math.Ceiling(_contactUsFormDal.GetCountOfContactUsForms(dbFilter) / pageResults);
 
             List<ContactUsForm> contactUsForms = _contactUsFormDal.GetContactUsFormsPaginatedAndFiltered(contactUsFormPaginationAndFilterObject, pageResults, dbFilter);
