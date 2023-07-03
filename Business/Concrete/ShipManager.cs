@@ -105,7 +105,7 @@ namespace Business.Concrete
 
             return new ErrorResult("Ship does not exist.");
         }
-
+        // push test
         public async Task<IResult> GetShipsByBroker(ShipPaginationAndFilterObject paginationAndFilter)
         {
             ApplicationUser? user = await CurrentUser.GetCurrentUser(_userManager);
