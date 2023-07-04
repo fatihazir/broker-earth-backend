@@ -3,6 +3,7 @@ using System.Data;
 using Business.Abstract;
 using Core.DataAccess.PaginationAndFilter;
 using Entities.Concrete;
+using Entities.CustomDataEntryObjects;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -64,9 +65,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> AddShip([FromQuery] Ship ship)
+        public async Task<ActionResult> AddShip([FromQuery] CustomShipCreateObject customShipCreateObject)
         {
-            var result = await _shipService.AddShip(ship);
+            var result = await _shipService.AddShip(customShipCreateObject);
 
             if (result.Success)
             {
@@ -78,9 +79,9 @@ namespace WebAPI.Controllers
 
         [HttpPatch]
         [Route("/api/[controller]/{shipId}")]
-        public async Task<ActionResult> UpdateShip([FromQuery] Ship ship, int shipId)
+        public async Task<ActionResult> UpdateShip([FromQuery] CustomShipUpdateObject customShipUpdateObject, int shipId)
         {
-            var result = await _shipService.UpdateShip(ship, shipId);
+            var result = await _shipService.UpdateShip(customShipUpdateObject, shipId);
 
             if (result.Success)
             {

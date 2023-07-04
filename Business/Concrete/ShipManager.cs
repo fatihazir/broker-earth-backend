@@ -15,6 +15,7 @@ using Core.Utilities.IoC;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
+using Entities.CustomDataEntryObjects;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -37,8 +38,7 @@ namespace Business.Concrete
             _userManager = userManager;
         }
 
-        [ValidationAspect(typeof(ShipAddValidation))]
-        public async Task<IResult> AddShip(Ship ship)
+        public async Task<IResult> GetShipById(int id)
         {
             ApplicationUser? user = await CurrentUser.GetCurrentUser(_userManager);
             Broker? usersBroker = _brokerDal.Get(b => b.BrokerId == user.Id || b.AssistantId == user.Id);
@@ -46,11 +46,71 @@ namespace Business.Concrete
             if (usersBroker is null)
                 return new ErrorResult("Your broker account does not exist.");
 
-            ship.BrokerId = usersBroker.Id;
-            ship.CreatedUserId = user.Id;
-            ship.EditedUserId = user.Id;
-            ship.CreatedAt = DateTime.Now;
+            var ship = _shipDal.Get(s => s.Id == id);
 
+            if (ship is not null)
+            {
+                if (usersBroker.Id == ship.BrokerId)
+                {
+                    return new SuccessDataResult<Ship>(ship);
+                }
+                else
+                {
+                    return new ErrorResult("Since your broker does not own this ship, you are not authorized to see details.");
+                }
+            }
+
+            return new ErrorResult("Ship does not exist.");
+        }
+
+        public async Task<IResult> GetShipsByBroker(ShipPaginationAndFilterObject paginationAndFilter)
+        {
+            ApplicationUser? user = await CurrentUser.GetCurrentUser(_userManager);
+
+            if (user is null)
+                return new ErrorResult("Your broker account does not exist.");
+
+            var dbFilter = PredicateBuilder.True<Ship>();
+            dbFilter = dbFilter.And(s => s.CreatedUserId == user.Id);
+            dbFilter = dbFilter.And(s => s.IsDeleted == paginationAndFilter.IsDeleted);
+
+            if (paginationAndFilter.All)
+            {
+                return new SuccessDataResult<List<Ship>>(_shipDal.GetAll(dbFilter));
+            }
+
+            var pageResults = 2f;
+            var pageCount = Math.Ceiling(_shipDal.GetCountOfShips(dbFilter) / pageResults);
+
+            List<Ship> ships = _shipDal.GetShipsPaginatedAndFiltered(paginationAndFilter, pageResults, dbFilter);
+            return new PaginatedSuccessDataResult<List<Ship>>(ships, paginationAndFilter.Page, (int)pageCount);
+        }
+
+        [ValidationAspect(typeof(ShipAddValidation))]
+        public async Task<IResult> AddShip([FromBody] CustomShipCreateObject customShipCreateObject)
+        {
+            ApplicationUser? user = await CurrentUser.GetCurrentUser(_userManager);
+            Broker? usersBroker = _brokerDal.Get(b => b.BrokerId == user.Id || b.AssistantId == user.Id);
+
+            if (usersBroker is null)
+                return new ErrorResult("Your broker account does not exist.");
+
+            Ship ship = new() {
+                BrokerId = usersBroker.Id,
+                CreatedUserId = user.Id,
+                EditedUserId = user.Id,
+                DeadWeight = customShipCreateObject.DeadWeight,
+                ConfidenceInterval = customShipCreateObject.ConfidenceInterval,
+                AvailableFrom = customShipCreateObject.AvailableFrom,
+                CreatedAt = DateTime.Now,
+                Name = customShipCreateObject.Name,
+                Flag = customShipCreateObject.Flag,
+                Description = customShipCreateObject.Description,
+                Latitude = customShipCreateObject.Latitude,
+                Longtitude = customShipCreateObject.Longtitude,
+                IsDeleted = false
+            };
+            
             return new SuccessDataResult<Ship>(_shipDal.AddAndRetriveData(ship), "Ship created.");
         }
 
@@ -63,12 +123,12 @@ namespace Business.Concrete
                 return new ErrorResult("Your broker account does not exist.");
 
             Ship shipToBeDeleted = _shipDal.Get(s => s.Id == id);
-            shipToBeDeleted.IsDeleted = true;
 
             if(shipToBeDeleted is not null)
             {
                 if (usersBroker.Id == shipToBeDeleted.BrokerId)
                 {
+                    shipToBeDeleted.IsDeleted = true;
                     _shipDal.Update(shipToBeDeleted);
                     return new SuccessResult("Ship deleted");
                 }else
@@ -81,57 +141,8 @@ namespace Business.Concrete
             return new ErrorResult("Ship does not exist.");
         }
 
-        public async Task<IResult> GetShipById(int id)
-        {
-            ApplicationUser? user = await CurrentUser.GetCurrentUser(_userManager);
-            Broker? usersBroker = _brokerDal.Get(b => b.BrokerId == user.Id || b.AssistantId == user.Id);
-
-            if (usersBroker is null)
-                return new ErrorResult("Your broker account does not exist.");
-
-            var ship = _shipDal.Get(s => s.Id == id);
-
-            if(ship is not null)
-            {
-                if(usersBroker.Id == ship.BrokerId)
-                {
-                    return new SuccessDataResult<Ship>(ship);
-
-                }
-                else
-                {
-                    return new ErrorResult("Since your broker does not own this ship, you are not authorized to see details.");
-                }
-            }
-
-            return new ErrorResult("Ship does not exist.");
-        }
-        // push test
-        public async Task<IResult> GetShipsByBroker(ShipPaginationAndFilterObject paginationAndFilter)
-        {
-            ApplicationUser? user = await CurrentUser.GetCurrentUser(_userManager);
-
-            if (user is null)
-                return new ErrorResult("Your broker account does not exist.");
-
-            var dbFilter = PredicateBuilder.True<Ship>();
-            dbFilter = dbFilter.And(s => s.CreatedUserId == user.Id);
-            dbFilter = dbFilter.And(s => s.IsDeleted == paginationAndFilter.IsDeleted);
-            
-            if (paginationAndFilter.All)
-            {
-                return new SuccessDataResult<List<Ship>>(_shipDal.GetAll(dbFilter));
-            }
-                
-            var pageResults = 2f;
-            var pageCount = Math.Ceiling(_shipDal.GetCountOfShips(dbFilter) / pageResults);
-
-            List<Ship> ships = _shipDal.GetShipsPaginatedAndFiltered(paginationAndFilter, pageResults, dbFilter);
-            return new PaginatedSuccessDataResult<List<Ship>>(ships, paginationAndFilter.Page, (int)pageCount);
-        }
-
         [ValidationAspect(typeof(ShipUpdateValidation))]
-        public async Task<IResult> UpdateShip([FromBody]Ship ship, int id)
+        public async Task<IResult> UpdateShip([FromBody] CustomShipUpdateObject customShipUpdateObject, int id)
         {
             ApplicationUser? user = await CurrentUser.GetCurrentUser(_userManager);
             Broker? usersBroker = _brokerDal.Get(b => b.BrokerId == user.Id || b.AssistantId == user.Id);
@@ -139,10 +150,21 @@ namespace Business.Concrete
             if (usersBroker is null)
                 return new ErrorResult("Your broker account does not exist.");
 
-            if (ship.BrokerId == usersBroker.Id)
+            Ship shipToBeUpdated = _shipDal.Get(s => s.Id == id);
+
+            if (shipToBeUpdated.BrokerId == usersBroker.Id)
             {
-                ship.EditedUserId = user.Id;
-                _shipDal.Update(ship);
+                shipToBeUpdated.EditedUserId = user.Id;
+                shipToBeUpdated.DeadWeight = customShipUpdateObject.DeadWeight;
+                shipToBeUpdated.ConfidenceInterval = customShipUpdateObject.ConfidenceInterval;
+                shipToBeUpdated.AvailableFrom = customShipUpdateObject.AvailableFrom;
+                shipToBeUpdated.Name = customShipUpdateObject.Name;
+                shipToBeUpdated.Flag = customShipUpdateObject.Flag;
+                shipToBeUpdated.Description = customShipUpdateObject.Description;
+                shipToBeUpdated.Latitude = customShipUpdateObject.Latitude;
+                shipToBeUpdated.Longtitude = customShipUpdateObject.Longtitude;
+
+                _shipDal.Update(shipToBeUpdated);
                 return new SuccessResult("Ship updated");
             }
             else
