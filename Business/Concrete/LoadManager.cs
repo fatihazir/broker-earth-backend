@@ -100,6 +100,7 @@ namespace Business.Concrete
                 LoadWeight = customLoadCreateObject.LoadWeight,
                 Commission = customLoadCreateObject.Commission,
                 CreatedAt = DateTime.Now,
+                LastEditTime = DateTime.Now,
                 LayCanFrom = customLoadCreateObject.LayCanFrom,
                 LayCanTo = customLoadCreateObject.LayCanTo,
                 Description = customLoadCreateObject.Description,

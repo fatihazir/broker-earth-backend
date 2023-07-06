@@ -30,7 +30,7 @@ namespace Business.DependencyResolvers.AutoFac
             builder.RegisterType<ShipManager>().As<IShipService>();
             builder.RegisterType<EfShipDal>().As<IShipDal>();
 
-            //builder.RegisterType<ShipManager>().As<IShipService>();
+            builder.RegisterType<LoadManager>().As<ILoadService>();
             builder.RegisterType<EfLoadDal>().As<ILoadDal>();
 
             builder.RegisterType<UserManager>().As<IUserService>();
