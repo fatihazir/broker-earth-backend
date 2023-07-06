@@ -1,5 +1,5 @@
 ﻿using System;
-namespace Entities.CustomDataEntryObjects
+namespace Entities.CustomDataEntryObjects.Ship
 {
 	public class CustomShipCreateObject
 	{

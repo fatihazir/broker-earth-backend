@@ -1,6 +1,7 @@
 ﻿using System;
 using Entities.Concrete;
 using Entities.CustomDataEntryObjects;
+using Entities.CustomDataEntryObjects.Ship;
 using FluentValidation;
 
 namespace Business.ValidationRules.FluentValidation

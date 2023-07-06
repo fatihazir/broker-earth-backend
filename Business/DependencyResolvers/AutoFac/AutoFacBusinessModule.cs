@@ -25,11 +25,13 @@ namespace Business.DependencyResolvers.AutoFac
             builder.RegisterType<BrokerManager>().As<IBrokerService>();
             builder.RegisterType<EfBrokerDal>().As<IBrokerDal>();
 
-            //builder.RegisterType<CategoryManager>().As<ICategoryService>();
             builder.RegisterType<EfLoadDal>().As<ILoadDal>();
 
             builder.RegisterType<ShipManager>().As<IShipService>();
             builder.RegisterType<EfShipDal>().As<IShipDal>();
+
+            //builder.RegisterType<ShipManager>().As<IShipService>();
+            builder.RegisterType<EfLoadDal>().As<ILoadDal>();
 
             builder.RegisterType<UserManager>().As<IUserService>();
             builder.RegisterType<EfAspNetUserDal>().As<IAspNetUserDal>();

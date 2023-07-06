@@ -12,6 +12,8 @@
     <None Remove="Abstract\**" />
     <None Remove="CustomLoginReturnObject\" />
     <None Remove="CustomDataEntryObjects\" />
+    <None Remove="CustomDataEntryObjects\Ship\" />
+    <None Remove="CustomDataEntryObjects\Load\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -27,5 +29,7 @@
     <Folder Include="DTOs\" />
     <Folder Include="CustomReturnObjects\" />
     <Folder Include="CustomDataEntryObjects\" />
+    <Folder Include="CustomDataEntryObjects\Ship\" />
+    <Folder Include="CustomDataEntryObjects\Load\" />
   </ItemGroup>
 </Project>

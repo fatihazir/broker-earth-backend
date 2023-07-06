@@ -3,7 +3,7 @@ using System.Data;
 using Business.Abstract;
 using Core.DataAccess.PaginationAndFilter;
 using Entities.Concrete;
-using Entities.CustomDataEntryObjects;
+using Entities.CustomDataEntryObjects.Ship;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

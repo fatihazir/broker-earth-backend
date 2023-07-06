@@ -3,6 +3,7 @@ using Core.DataAccess.PaginationAndFilter;
 using Core.Utilities.Results;
 using Entities.Concrete;
 using Entities.CustomDataEntryObjects;
+using Entities.CustomDataEntryObjects.Ship;
 using Entities.DTOs;
 using Microsoft.AspNetCore.Mvc;
 
