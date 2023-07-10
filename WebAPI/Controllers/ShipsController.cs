@@ -65,7 +65,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> AddShip([FromQuery] CustomShipCreateObject customShipCreateObject)
+        public async Task<ActionResult> AddShip([FromBody] CustomShipCreateObject customShipCreateObject)
         {
             var result = await _shipService.AddShip(customShipCreateObject);
 
@@ -79,7 +79,7 @@ namespace WebAPI.Controllers
 
         [HttpPatch]
         [Route("/api/[controller]/{shipId}")]
-        public async Task<ActionResult> UpdateShip([FromQuery] CustomShipUpdateObject customShipUpdateObject, int shipId)
+        public async Task<ActionResult> UpdateShip([FromBody] CustomShipUpdateObject customShipUpdateObject, int shipId)
         {
             var result = await _shipService.UpdateShip(customShipUpdateObject, shipId);
 

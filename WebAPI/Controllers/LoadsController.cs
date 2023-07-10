@@ -69,7 +69,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> AddLoad([FromQuery] CustomLoadCreateObject customLoadCreateObject)
+        public async Task<ActionResult> AddLoad([FromBody] CustomLoadCreateObject customLoadCreateObject)
         {
             var result = await _loadService.AddLoad(customLoadCreateObject);
 
@@ -83,7 +83,7 @@ namespace WebAPI.Controllers
 
         [HttpPatch]
         [Route("/api/[controller]/{loadId}")]
-        public async Task<ActionResult> UpdateLoad([FromQuery] CustomLoadUpdateObject customloadUpdateObject, int loadId)
+        public async Task<ActionResult> UpdateLoad([FromBody] CustomLoadUpdateObject customloadUpdateObject, int loadId)
         {
             var result = await _loadService.UpdateLoad(customloadUpdateObject, loadId);
 
