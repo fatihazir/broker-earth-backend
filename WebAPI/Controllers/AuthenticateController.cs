@@ -43,7 +43,7 @@ namespace WebAPI.Controllers
 
         [HttpPatch]
         [Route("refresh-token")]
-        public async Task<IActionResult> RefreshToken(TokenModel tokenModel)
+        public async Task<IActionResult> RefreshToken([FromBody] TokenModel tokenModel)
         {
             var result = await _authenticateService.RefreshToken(tokenModel);
 
