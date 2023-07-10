@@ -9,7 +9,7 @@ namespace Business.ValidationRules.FluentValidation
 		public ContactUsFormValidation()
 		{
 			RuleFor(r => r.NameAndSurname).NotEmpty();
-            RuleFor(r => r.Email).NotEmpty();
+            RuleFor(r => r.Email).NotEmpty().EmailAddress();
             RuleFor(r => r.Title).NotEmpty();
             RuleFor(r => r.Message).NotEmpty();
 
