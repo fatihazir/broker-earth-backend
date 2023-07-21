@@ -9,8 +9,8 @@ namespace DataAccess.Abstract
 {
 	public interface ILoadDal: IEntityRepository<Load>
 	{
-        int GetCountOfLoads(Expression<Func<Load, bool>> filter);
-        List<Load> GetLoadsPaginatedAndFiltered(LoadPaginationAndFilterObject paginationAndFilter, float pageResult, Expression<Func<Load, bool>> filter = null);
+        Task<int> GetCountOfLoads(Expression<Func<Load, bool>> filter);
+        Task<List<Load>> GetLoadsPaginatedAndFiltered(LoadPaginationAndFilterObject paginationAndFilter, float pageResult, Expression<Func<Load, bool>> filter = null);
     }
 }
 

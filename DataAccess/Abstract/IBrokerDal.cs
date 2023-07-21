@@ -8,7 +8,7 @@ namespace DataAccess.Abstract
 {
 	public interface IBrokerDal : IEntityRepository<Broker>
 	{
-        BrokerStatisticsDto GetBrokerStatisticsByUser(string userId);
+        Task<BrokerStatisticsDto> GetBrokerStatisticsByUser(string userId);
     }
 }
 

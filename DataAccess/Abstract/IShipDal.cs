@@ -9,8 +9,8 @@ namespace DataAccess.Abstract
 {
     public interface IShipDal: IEntityRepository<Ship>
     {
-		int GetCountOfShips(Expression<Func<Ship, bool>> filter);
-        List<Ship> GetShipsPaginatedAndFiltered(ShipPaginationAndFilterObject paginationAndFilter, float pageResult, Expression<Func<Ship, bool>> filter=null);
+		Task<int> GetCountOfShips(Expression<Func<Ship, bool>> filter);
+        Task<List<Ship>> GetShipsPaginatedAndFiltered(ShipPaginationAndFilterObject paginationAndFilter, float pageResult, Expression<Func<Ship, bool>> filter=null);
 	}
 }
 
