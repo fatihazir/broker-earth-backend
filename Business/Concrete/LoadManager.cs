@@ -38,12 +38,12 @@ namespace Business.Concrete
         public async Task<IResult> GetLoadById(int id)
         {
             ApplicationUser? user = await CurrentUser.GetCurrentUser(_userManager);
-            Broker? usersBroker = _brokerDal.Get(b => b.BrokerId == user.Id || b.AssistantId == user.Id);
+            Broker? usersBroker = await _brokerDal.Get(b => b.BrokerId == user.Id || b.AssistantId == user.Id);
 
             if (usersBroker is null)
                 return new ErrorResult("Your broker account does not exist.");
 
-            var load = _loadDal.Get(l => l.Id == id);
+            var load = await _loadDal.Get(l => l.Id == id);
 
             if (load is not null)
             {
@@ -73,13 +73,13 @@ namespace Business.Concrete
 
             if (paginationAndFilter.All)
             {
-                return new SuccessDataResult<List<Load>>(_loadDal.GetAll(dbFilter));
+                return new SuccessDataResult<List<Load>>(await _loadDal.GetAll(dbFilter));
             }
 
             var pageResults = 2f;
-            var pageCount = Math.Ceiling(_loadDal.GetCountOfLoads(dbFilter) / pageResults);
+            var pageCount = Math.Ceiling(await _loadDal.GetCountOfLoads(dbFilter) / pageResults);
 
-            List<Load> loads = _loadDal.GetLoadsPaginatedAndFiltered(paginationAndFilter, pageResults, dbFilter);
+            List<Load> loads = await _loadDal.GetLoadsPaginatedAndFiltered(paginationAndFilter, pageResults, dbFilter);
             return new PaginatedSuccessDataResult<List<Load>>(loads, paginationAndFilter.Page, (int)pageCount);
         }
 
@@ -87,7 +87,7 @@ namespace Business.Concrete
         public async Task<IResult> AddLoad([FromBody] CustomLoadCreateObject customLoadCreateObject)
         {
             ApplicationUser? user = await CurrentUser.GetCurrentUser(_userManager);
-            Broker? usersBroker = _brokerDal.Get(b => b.BrokerId == user.Id || b.AssistantId == user.Id);
+            Broker? usersBroker = await _brokerDal.Get(b => b.BrokerId == user.Id || b.AssistantId == user.Id);
 
             if (usersBroker is null)
                 return new ErrorResult("Your broker account does not exist.");
@@ -109,19 +109,19 @@ namespace Business.Concrete
                 IsDeleted = false
             };
 
-            return new SuccessDataResult<Load>(_loadDal.AddAndRetriveData(load), "Load created.");
+            return new SuccessDataResult<Load>(await _loadDal.AddAndRetriveData(load), "Load created.");
         }
 
         [ValidationAspect(typeof(LoadUpdateValidation))]
         public async Task<IResult> UpdateLoad([FromBody] CustomLoadUpdateObject customLoadUpdateObject, int loadId)
         {
             ApplicationUser? user = await CurrentUser.GetCurrentUser(_userManager);
-            Broker? usersBroker = _brokerDal.Get(b => b.BrokerId == user.Id || b.AssistantId == user.Id);
+            Broker? usersBroker = await _brokerDal.Get(b => b.BrokerId == user.Id || b.AssistantId == user.Id);
 
             if (usersBroker is null)
                 return new ErrorResult("Your broker account does not exist.");
 
-            Load loadToBeUpdated = _loadDal.Get(l => l.Id == loadId);
+            Load loadToBeUpdated = await _loadDal.Get(l => l.Id == loadId);
 
             if (loadToBeUpdated.BrokerId == usersBroker.Id)
             {
@@ -135,7 +135,7 @@ namespace Business.Concrete
                 loadToBeUpdated.Latitude = customLoadUpdateObject.Latitude;
                 loadToBeUpdated.Longtitude = customLoadUpdateObject.Longtitude;
 
-                _loadDal.Update(loadToBeUpdated);
+                await _loadDal.Update(loadToBeUpdated);
                 return new SuccessResult("Load updated");
             }
             else
@@ -150,19 +150,19 @@ namespace Business.Concrete
         public async Task<IResult> DeleteLoadById(int id)
         {
             ApplicationUser? user = await CurrentUser.GetCurrentUser(_userManager);
-            Broker? usersBroker = _brokerDal.Get(b => b.BrokerId == user.Id || b.AssistantId == user.Id);
+            Broker? usersBroker = await _brokerDal.Get(b => b.BrokerId == user.Id || b.AssistantId == user.Id);
 
             if (usersBroker is null)
                 return new ErrorResult("Your broker account does not exist.");
 
-            Load loadToBeDeleted = _loadDal.Get(l => l.Id == id);
+            Load loadToBeDeleted = await _loadDal.Get(l => l.Id == id);
 
             if (loadToBeDeleted is not null)
             {
                 if (usersBroker.Id == loadToBeDeleted.BrokerId)
                 {
                     loadToBeDeleted.IsDeleted = true;
-                    _loadDal.Update(loadToBeDeleted);
+                    await _loadDal.Update(loadToBeDeleted);
                     return new SuccessResult("Load deleted");
                 }
                 else

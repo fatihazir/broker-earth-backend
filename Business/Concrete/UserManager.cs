@@ -33,7 +33,7 @@ namespace Business.Concrete
             string? username = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Name);
             ApplicationUser? user = await _userManager.FindByNameAsync(username);
 
-            return new SuccessDataResult<UserInfoDto>(_aspNetUserDal.GetUserPersonalInformation(user));
+            return new SuccessDataResult<UserInfoDto>(await _aspNetUserDal.GetUserPersonalInformation(user));
         }
     }
 }

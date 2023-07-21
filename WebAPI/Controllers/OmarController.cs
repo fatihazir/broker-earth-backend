@@ -6,8 +6,9 @@ namespace WebAPI.Controllers
 {
     //[Authorize(Roles ="User, Admin")]
     [Route("api/[controller]")]
-    [ApiController]
-    public class OmarController : ControllerBase
+    //[ApiController]
+    public class OmarController
+        //: ControllerBase
     {
         [Authorize(Roles = "User")]
         [HttpGet]

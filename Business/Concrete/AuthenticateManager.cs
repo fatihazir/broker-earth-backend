@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Business.Concrete
@@ -244,7 +245,7 @@ namespace Business.Concrete
 
         public async Task<IResult> RevokeAll()
         {
-            var users = _userManager.Users.ToList();
+            var users = await _userManager.Users.ToListAsync();
             foreach (var user in users)
             {
                 user.RefreshToken = null;

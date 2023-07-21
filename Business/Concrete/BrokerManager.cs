@@ -31,7 +31,7 @@ namespace Business.Concrete
             string? username = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Name);
             ApplicationUser? user = await _userManager.FindByNameAsync(username);
 
-            return new SuccessDataResult<BrokerStatisticsDto>(_brokerDal.GetBrokerStatisticsByUser(user.Id));
+            return new SuccessDataResult<BrokerStatisticsDto>(await _brokerDal.GetBrokerStatisticsByUser(user.Id));
         }
     }
 }
