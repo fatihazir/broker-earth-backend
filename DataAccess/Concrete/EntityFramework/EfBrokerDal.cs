@@ -4,29 +4,26 @@ using Core.Entities.Concrete;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using Entities.DTOs;
+using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.Concrete.EntityFramework
 {
 	public class EfBrokerDal : EfEntityRepositoryBase<Broker, BrokerContext>, IBrokerDal
     {
-		public BrokerStatisticsDto GetBrokerStatisticsByUser(string userId)
+		public async Task<BrokerStatisticsDto> GetBrokerStatisticsByUser(string userId)
 		{
-			using(BrokerContext context = new())
-			{
-				var result = from broker in context.Brokers
-							 where (broker.BrokerId == userId ||
-                             broker.AssistantId == userId)
-							 select new BrokerStatisticsDto
-							 {
-								 BrokerId = broker.Id,
-								 CompanyName = broker.CompanyName,
-								 TotalShips = context.Ships.Count(s => s.BrokerId == broker.Id),
-								 TotalLoads = context.Loads.Count(c => c.BrokerId == broker.Id),
-								 TotalMatches = context.Matches.Count(m => m.BrokerId == broker.Id)
-							 };
-
-				return result.FirstOrDefault();
-			}
+            using (BrokerContext context = new BrokerContext())
+            {
+                Broker tempBroker = await context.Brokers.FirstOrDefaultAsync(b => b.BrokerId == userId || b.AssistantId == userId);
+                return new BrokerStatisticsDto
+                {
+                    BrokerId = tempBroker.Id,
+                    CompanyName = tempBroker.CompanyName,
+                    TotalShips = await context.Ships.CountAsync(s => s.BrokerId == tempBroker.Id),
+                    TotalLoads = await context.Loads.CountAsync(c => c.BrokerId == tempBroker.Id),
+                    TotalMatches = await context.Matches.CountAsync(m => m.BrokerId == tempBroker.Id)
+                };
+            }
 		}
 	}
 }

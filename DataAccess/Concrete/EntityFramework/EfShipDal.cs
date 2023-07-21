@@ -5,26 +5,27 @@ using Core.DataAccess.PaginationAndFilter;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using Entities.DTOs;
+using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.Concrete.EntityFramework
 {
     public class EfShipDal : EfEntityRepositoryBase<Ship, BrokerContext>, IShipDal
     {
-        public int GetCountOfShips(Expression<Func<Ship, bool>> filter = null)
+        public async Task<int> GetCountOfShips(Expression<Func<Ship, bool>> filter = null)
         {
             using (BrokerContext context = new())
             {
-                return context.Ships.Count(filter);
+                return await context.Ships.CountAsync(filter);
             }
         }
 
-        public List<Ship> GetShipsPaginatedAndFiltered(ShipPaginationAndFilterObject paginationAndFilter, float pageResult, Expression<Func<Ship, bool>> filter = null)
+        public async Task<List<Ship>> GetShipsPaginatedAndFiltered(ShipPaginationAndFilterObject paginationAndFilter, float pageResult, Expression<Func<Ship, bool>> filter = null)
         {
             using (BrokerContext context = new())
             {
-                var result = context.Ships.Where(filter)
+                var result = await context.Ships.Where(filter)
                     .Skip((paginationAndFilter.Page - 1) * (int)pageResult)
-                    .Take((int)pageResult).ToList();
+                    .Take((int)pageResult).ToListAsync();
 
                 return result;
             }
