@@ -29,19 +29,19 @@ namespace Business.Concrete
         [ValidationAspect(typeof(ContactUsFormValidation))]
         public async Task<IResult> AddContactUsForm(ContactUsForm contactUsForm)
         {
-            _contactUsFormDal.Add(contactUsForm);
+            await _contactUsFormDal.Add(contactUsForm);
 
             return new SuccessResult("Thank you for your interest. We will back to you soon!");
         }
 
         public async Task<IResult> DeleteContactUsForm(int id)
         {
-            ContactUsForm contactUsFormToBeDeleted = _contactUsFormDal.Get(c => c.Id == id);
+            ContactUsForm contactUsFormToBeDeleted = await _contactUsFormDal.Get(c => c.Id == id);
 
             if (contactUsFormToBeDeleted is not null)
             {
                 contactUsFormToBeDeleted.IsDeleted = true;
-                _contactUsFormDal.Update(contactUsFormToBeDeleted);
+                await _contactUsFormDal.Update(contactUsFormToBeDeleted);
                 return new SuccessResult("Contact us form deleted");
             }
 
@@ -50,7 +50,7 @@ namespace Business.Concrete
 
         public async Task<IResult> GetContactUsFormById(int id)
         {
-            var contactUsForm = _contactUsFormDal.Get(c => c.Id == id);
+            var contactUsForm = await _contactUsFormDal.Get(c => c.Id == id);
 
             if(contactUsForm is not null)
             {
@@ -67,13 +67,13 @@ namespace Business.Concrete
 
             if (contactUsFormPaginationAndFilterObject.All)
             {
-                return new SuccessDataResult<List<ContactUsForm>>(_contactUsFormDal.GetAll(dbFilter));
+                return new SuccessDataResult<List<ContactUsForm>>(await _contactUsFormDal.GetAll(dbFilter));
             }
 
             var pageResults = 5f;
-            var pageCount = Math.Ceiling(_contactUsFormDal.GetCountOfContactUsForms(dbFilter) / pageResults);
+            var pageCount = Math.Ceiling(await _contactUsFormDal.GetCountOfContactUsForms(dbFilter) / pageResults);
 
-            List<ContactUsForm> contactUsForms = _contactUsFormDal.GetContactUsFormsPaginatedAndFiltered(contactUsFormPaginationAndFilterObject, pageResults, dbFilter);
+            List<ContactUsForm> contactUsForms = await _contactUsFormDal.GetContactUsFormsPaginatedAndFiltered(contactUsFormPaginationAndFilterObject, pageResults, dbFilter);
             return new PaginatedSuccessDataResult<List<ContactUsForm>>(contactUsForms, contactUsFormPaginationAndFilterObject.Page, (int)pageCount);
         }
     }
