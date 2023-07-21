@@ -9,7 +9,7 @@ namespace DataAccess.Abstract
 {
 	public interface IAspNetUserDal : IEntityRepository<AspNetUser>
     {
-		public UserInfoDto GetUserPersonalInformation(ApplicationUser user);
+		public Task<UserInfoDto> GetUserPersonalInformation(ApplicationUser user);
 	}
 }
 
