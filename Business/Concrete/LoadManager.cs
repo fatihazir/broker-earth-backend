@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Claims;
 using Business.Abstract;
 using Business.CCS;
 using Business.ValidationRules.FluentValidation;
@@ -26,6 +27,7 @@ namespace Business.Concrete
         IBrokerDal _brokerDal;
         private IHttpContextAccessor _httpContextAccessor;
         private readonly UserManager<ApplicationUser> _userManager;
+       
 
         public LoadManager(ILoadDal loadDal, IBrokerDal brokerDal, UserManager<ApplicationUser> userManager)
         {
@@ -35,9 +37,8 @@ namespace Business.Concrete
             _userManager = userManager;
         }
 
-        public async Task<IResult> GetLoadById(int id)
+        public async Task<IResult> GetLoadById(int id, ApplicationUser user)
         {
-            ApplicationUser? user = await CurrentUser.GetCurrentUser(_userManager);
             Broker? usersBroker = await _brokerDal.Get(b => b.BrokerId == user.Id || b.AssistantId == user.Id);
 
             if (usersBroker is null)
@@ -60,10 +61,8 @@ namespace Business.Concrete
             return new ErrorResult("Load does not exist.");
         }
 
-        public async Task<IResult> GetLoadsByBroker(LoadPaginationAndFilterObject paginationAndFilter)
+        public async Task<IResult> GetLoadsByBroker(LoadPaginationAndFilterObject paginationAndFilter, ApplicationUser user)
         {
-            ApplicationUser? user = await CurrentUser.GetCurrentUser(_userManager);
-
             if (user is null)
                 return new ErrorResult("Your broker account does not exist.");
 
@@ -84,9 +83,8 @@ namespace Business.Concrete
         }
 
         [ValidationAspect(typeof(LoadAddValidation))]
-        public async Task<IResult> AddLoad([FromBody] CustomLoadCreateObject customLoadCreateObject)
+        public async Task<IResult> AddLoad([FromBody] CustomLoadCreateObject customLoadCreateObject, ApplicationUser user)
         {
-            ApplicationUser? user = await CurrentUser.GetCurrentUser(_userManager);
             Broker? usersBroker = await _brokerDal.Get(b => b.BrokerId == user.Id || b.AssistantId == user.Id);
 
             if (usersBroker is null)
@@ -113,9 +111,8 @@ namespace Business.Concrete
         }
 
         [ValidationAspect(typeof(LoadUpdateValidation))]
-        public async Task<IResult> UpdateLoad([FromBody] CustomLoadUpdateObject customLoadUpdateObject, int loadId)
+        public async Task<IResult> UpdateLoad([FromBody] CustomLoadUpdateObject customLoadUpdateObject, int loadId, ApplicationUser user)
         {
-            ApplicationUser? user = await CurrentUser.GetCurrentUser(_userManager);
             Broker? usersBroker = await _brokerDal.Get(b => b.BrokerId == user.Id || b.AssistantId == user.Id);
 
             if (usersBroker is null)
@@ -147,9 +144,8 @@ namespace Business.Concrete
             return new ErrorResult("Load does not exist.");
         }
 
-        public async Task<IResult> DeleteLoadById(int id)
+        public async Task<IResult> DeleteLoadById(int id, ApplicationUser user)
         {
-            ApplicationUser? user = await CurrentUser.GetCurrentUser(_userManager);
             Broker? usersBroker = await _brokerDal.Get(b => b.BrokerId == user.Id || b.AssistantId == user.Id);
 
             if (usersBroker is null)

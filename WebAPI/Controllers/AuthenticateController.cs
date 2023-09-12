@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Business.Concrete;
 using Business.ValidationRules.FluentValidation.CustomValidationObjects;
 using Core.Entities.Concrete;
 using Core.Utilities.Results;
@@ -21,10 +22,12 @@ namespace WebAPI.Controllers
     {
 
         private readonly IAuthenticateService _authenticateService;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public AuthenticateController(IAuthenticateService authenticateService)
+        public AuthenticateController(IAuthenticateService authenticateService, UserManager<ApplicationUser> userManager)
         {
             _authenticateService = authenticateService;
+            _userManager = userManager;
         }
 
         [HttpPost]

@@ -30,7 +30,7 @@ namespace Business.Concrete
         IBrokerDal _brokerDal;
         private IHttpContextAccessor _httpContextAccessor;
         private readonly UserManager<ApplicationUser> _userManager;
-
+     
         public ShipManager(IShipDal shipDal, IBrokerDal brokerDal, UserManager<ApplicationUser> userManager)
         {
             _shipDal = shipDal;
@@ -39,9 +39,8 @@ namespace Business.Concrete
             _userManager = userManager;
         }
 
-        public async Task<IResult> GetShipById(int id)
+        public async Task<IResult> GetShipById(int id, ApplicationUser user)
         {
-            ApplicationUser? user = await CurrentUser.GetCurrentUser(_userManager);
             Broker? usersBroker = await _brokerDal.Get(b => b.BrokerId == user.Id || b.AssistantId == user.Id);
 
             if (usersBroker is null)
@@ -64,10 +63,8 @@ namespace Business.Concrete
             return new ErrorResult("Ship does not exist.");
         }
 
-        public async Task<IResult> GetShipsByBroker(ShipPaginationAndFilterObject paginationAndFilter)
+        public async Task<IResult> GetShipsByBroker(ShipPaginationAndFilterObject paginationAndFilter, ApplicationUser user)
         {
-            ApplicationUser? user = await CurrentUser.GetCurrentUser(_userManager);
-
             if (user is null)
                 return new ErrorResult("Your broker account does not exist.");
 
@@ -88,9 +85,8 @@ namespace Business.Concrete
         }
 
         [ValidationAspect(typeof(ShipAddValidation))]
-        public async Task<IResult> AddShip([FromBody] CustomShipCreateObject customShipCreateObject)
+        public async Task<IResult> AddShip([FromBody] CustomShipCreateObject customShipCreateObject, ApplicationUser user)
         {
-            ApplicationUser? user = await CurrentUser.GetCurrentUser(_userManager);
             Broker? usersBroker = await _brokerDal.Get(b => b.BrokerId == user.Id || b.AssistantId == user.Id);
 
             if (usersBroker is null)
@@ -115,9 +111,8 @@ namespace Business.Concrete
             return new SuccessDataResult<Ship>(await _shipDal.AddAndRetriveData(ship), "Ship created.");
         }
 
-        public async Task<IResult> DeleteShipById(int id)
+        public async Task<IResult> DeleteShipById(int id, ApplicationUser user)
         {
-            ApplicationUser? user = await CurrentUser.GetCurrentUser(_userManager);
             Broker? usersBroker = await _brokerDal.Get(b => b.BrokerId == user.Id || b.AssistantId == user.Id);
 
             if (usersBroker is null)
@@ -143,9 +138,8 @@ namespace Business.Concrete
         }
 
         [ValidationAspect(typeof(ShipUpdateValidation))]
-        public async Task<IResult> UpdateShip([FromBody] CustomShipUpdateObject customShipUpdateObject, int id)
+        public async Task<IResult> UpdateShip([FromBody] CustomShipUpdateObject customShipUpdateObject, int id, ApplicationUser user)
         {
-            ApplicationUser? user = await CurrentUser.GetCurrentUser(_userManager);
             Broker? usersBroker = await _brokerDal.Get(b => b.BrokerId == user.Id || b.AssistantId == user.Id);
 
             if (usersBroker is null)
