@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Linq.Expressions;
 using Core.DataAccess.EntityFramework;
 using Core.Entities.Concrete;
 using DataAccess.Abstract;
+using DataAccess.PaginationAndFilter.Concrete;
 using Entities.Concrete;
 using Entities.DTOs;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +12,9 @@ namespace DataAccess.Concrete.EntityFramework
 {
 	public class EfBrokerDal : EfEntityRepositoryBase<Broker, BrokerContext>, IBrokerDal
     {
-		public async Task<BrokerStatisticsDto> GetBrokerStatisticsByUser(string userId)
+       
+
+        public async Task<BrokerStatisticsDto> GetBrokerStatisticsByUser(string userId)
 		{
             using (BrokerContext context = new BrokerContext())
             {

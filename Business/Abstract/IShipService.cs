@@ -2,6 +2,7 @@
 using Core.DataAccess.PaginationAndFilter;
 using Core.Entities.Concrete;
 using Core.Utilities.Results;
+using DataAccess.PaginationAndFilter.Concrete;
 using Entities.Concrete;
 using Entities.CustomDataEntryObjects;
 using Entities.CustomDataEntryObjects.Ship;

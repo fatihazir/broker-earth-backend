@@ -16,7 +16,7 @@ using Microsoft.OpenApi.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 // For Entity Framework
-builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer("Data Source=mssql-109799-0.cloudclusters.net,18159;User ID=fatihhazir;Password=Samsungsony2000;Database=BrokerProject;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False"));
+builder.Services.AddDbContext<ApplicationDbContext>();
 
 //Lower case endpoints
 builder.Services.AddRouting(options => options.LowercaseUrls = true);

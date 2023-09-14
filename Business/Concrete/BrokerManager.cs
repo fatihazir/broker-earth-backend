@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Security.Claims;
 using Business.Abstract;
+using Core.DataAccess.Predicate;
 using Core.Entities.Concrete;
 using Core.Utilities.IoC;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
+using DataAccess.PaginationAndFilter.Concrete;
 using Entities.Concrete;
 using Entities.DTOs;
 using Microsoft.AspNetCore.Http;
@@ -33,6 +35,8 @@ namespace Business.Concrete
 
             return new SuccessDataResult<BrokerStatisticsDto>(await _brokerDal.GetBrokerStatisticsByUser(user.Id));
         }
+
+       
     }
 }
 

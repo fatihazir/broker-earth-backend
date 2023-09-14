@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Business.Abstract;
+using DataAccess.PaginationAndFilter.Concrete;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,7 +12,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
 {
-    [Authorize(Roles ="User, Admin")]
     [Route("api/[controller]")]
     public class BrokersController : Controller
     {
@@ -23,6 +23,7 @@ namespace WebAPI.Controllers
             _brokerService = brokerService;
         }
 
+        [Authorize(Roles = "User, Admin")]
         [HttpGet("statistics")]
         public async Task<IActionResult> Get()
         {
@@ -35,6 +36,8 @@ namespace WebAPI.Controllers
 
             return BadRequest(result);
         }
+
+        
     }
 }
 

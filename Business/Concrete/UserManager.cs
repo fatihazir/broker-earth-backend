@@ -6,6 +6,8 @@ using Core.Utilities.IoC;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using DataAccess.Concrete.EntityFramework;
+using DataAccess.PaginationAndFilter.Concrete;
+using Entities.Concrete;
 using Entities.DTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -34,6 +36,14 @@ namespace Business.Concrete
             ApplicationUser? user = await _userManager.FindByNameAsync(username);
 
             return new SuccessDataResult<UserInfoDto>(await _aspNetUserDal.GetUserPersonalInformation(user));
+        }
+
+        public async Task<IResult> GetAllUsers(UserPaginationAndFilterObject paginationAndFilter)
+        {
+            var pageResults = 10f;
+            var pageCount = Math.Ceiling(_userManager.Users.Count() / pageResults);
+            var result = await _aspNetUserDal.GetAllUsersPaginatedAndFiltered(paginationAndFilter, pageResults);
+            return new PaginatedSuccessDataResult<List<AllUsersDto>>(result, paginationAndFilter.Page, (int)pageCount);
         }
     }
 }

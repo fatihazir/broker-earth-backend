@@ -4,9 +4,9 @@ using Entities.Concrete;
 
 namespace DataAccess.PaginationAndFilter.Concrete
 {
-	public class LoadPaginationAndFilterObject : PaginationAndFilterBase<Load>
+	public class UserPaginationAndFilterObject : PaginationAndFilterBase<Broker>
     {
-        public bool? IsDeleted { get; set; } = false;
-    }
+		public string SearchQuery { get; set; } = string.Empty;
+	}
 }
 
