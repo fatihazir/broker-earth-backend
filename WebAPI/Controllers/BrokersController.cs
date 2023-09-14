@@ -25,7 +25,7 @@ namespace WebAPI.Controllers
 
         [Authorize(Roles = "User, Admin")]
         [HttpGet("statistics")]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> GetStatistics()
         {
             var result = await _brokerService.GetBrokerStatisticsByUser();
 
@@ -37,7 +37,21 @@ namespace WebAPI.Controllers
             return BadRequest(result);
         }
 
-        
+        [Authorize(Roles = "Admin")]
+        [HttpGet("GetAll")]
+        public async Task<IActionResult> GetAll()
+        {
+            var result = await _brokerService.GetAll();
+
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+
+            return BadRequest(result);
+        }
+
+
     }
 }
 

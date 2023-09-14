@@ -36,7 +36,10 @@ namespace Business.Concrete
             return new SuccessDataResult<BrokerStatisticsDto>(await _brokerDal.GetBrokerStatisticsByUser(user.Id));
         }
 
-       
+        public async Task<IResult> GetAll()
+        {
+            return new SuccessDataResult<List<Broker>>(await _brokerDal.GetAll());
+        }
     }
 }
 

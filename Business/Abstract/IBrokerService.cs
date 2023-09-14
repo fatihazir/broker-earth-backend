@@ -9,7 +9,7 @@ namespace Business.Abstract
 	public interface IBrokerService
 	{
         public Task<IResult> GetBrokerStatisticsByUser();
-        
+        public Task<IResult> GetAll();
     }
 }
 
