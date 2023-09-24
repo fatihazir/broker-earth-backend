@@ -1,7 +1,10 @@
 ﻿using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net;
+using System.Net.Mail;
 using System.Security.Claims;
 using Business.Abstract;
+using Business.CCS;
 using Business.ValidationRules.FluentValidation;
 using Business.ValidationRules.FluentValidation.CustomValidationObjects;
 using Core.Aspects.Autofac.Validation;
@@ -119,6 +122,7 @@ namespace Business.Concrete
         public async Task<IResult> RegisterUser([FromBody] UserRegisterValidationObject model)
         {
             var userExists = await _userManager.FindByNameAsync(model.Username);
+
             if (userExists != null)
                 return new ErrorResult("User already exists.");
 
@@ -126,11 +130,12 @@ namespace Business.Concrete
             {
                 Email = model.Email,
                 SecurityStamp = Guid.NewGuid().ToString(),
-                UserName = model.Username
+                UserName = model.Username,
             };
 
-            var result = await _userManager.CreateAsync(user, model.Password);
+            string autoCreatedPassword = "P" + Guid.NewGuid().ToString();
 
+            var result = await _userManager.CreateAsync(user, autoCreatedPassword);
 
             if (!result.Succeeded)
             {
@@ -148,89 +153,97 @@ namespace Business.Concrete
                 await _userManager.AddToRoleAsync(user, UserRoles.User);
             }
 
-            var registereduser = await _userManager.FindByNameAsync(model.Username);
+            string mailBody = $"Username: {model.Email} {Environment.NewLine}Password: {autoCreatedPassword}";
+            IResult mailResult = MailHelper.SendMail(model.Email, "Login Credentials", mailBody);
 
-            _brokerDal.Add(new Broker {BrokerId = registereduser.Id, CompanyName = model.CompanyName });
+            if (mailResult.Success)
+            {
+                return new SuccessResult("User created succesfully.");
+            }
+            else
+            {
+                return new ErrorResult(mailResult.Message);
+            }
 
-            return new SuccessResult("User created succesfully.");
+           
         }
 
-        [ValidationAspect(typeof(RegisterValidation))]
-        public async Task<IResult> RegisterAdmin([FromBody] RegisterModel model)
-        {
-            var userExists = await _userManager.FindByNameAsync(model.Username);
-            if (userExists != null)
-                return new ErrorResult("User already exists.");
+        //[ValidationAspect(typeof(RegisterValidation))]
+        //public async Task<IResult> RegisterAdmin([FromBody] RegisterModel model)
+        //{
+        //    var userExists = await _userManager.FindByNameAsync(model.Username);
+        //    if (userExists != null)
+        //        return new ErrorResult("User already exists.");
 
-            ApplicationUser user = new()
-            {
-                Email = model.Email,
-                SecurityStamp = Guid.NewGuid().ToString(),
-                UserName = model.Username
-            };
-            var result = await _userManager.CreateAsync(user, model.Password);
+        //    ApplicationUser user = new()
+        //    {
+        //        Email = model.Email,
+        //        SecurityStamp = Guid.NewGuid().ToString(),
+        //        UserName = model.Username
+        //    };
+        //    var result = await _userManager.CreateAsync(user, model.Password);
 
-            if (!result.Succeeded)
-            {
-                string errorMessage = string.Empty;
-                foreach (var error in result.Errors)
-                {
-                    errorMessage += error.Description;
-                }
-                return new ErrorResult(errorMessage);
-            }
+        //    if (!result.Succeeded)
+        //    {
+        //        string errorMessage = string.Empty;
+        //        foreach (var error in result.Errors)
+        //        {
+        //            errorMessage += error.Description;
+        //        }
+        //        return new ErrorResult(errorMessage);
+        //    }
 
-            if (!await _roleManager.RoleExistsAsync(UserRoles.Admin))
-                await _roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
-            if (!await _roleManager.RoleExistsAsync(UserRoles.User))
-                await _roleManager.CreateAsync(new IdentityRole(UserRoles.User));
+        //    if (!await _roleManager.RoleExistsAsync(UserRoles.Admin))
+        //        await _roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
+        //    if (!await _roleManager.RoleExistsAsync(UserRoles.User))
+        //        await _roleManager.CreateAsync(new IdentityRole(UserRoles.User));
 
-            if (await _roleManager.RoleExistsAsync(UserRoles.Admin))
-            {
-                await _userManager.AddToRoleAsync(user, UserRoles.Admin);
-            }
-            if (await _roleManager.RoleExistsAsync(UserRoles.User))
-            {
-                await _userManager.AddToRoleAsync(user, UserRoles.User);
-            }
+        //    if (await _roleManager.RoleExistsAsync(UserRoles.Admin))
+        //    {
+        //        await _userManager.AddToRoleAsync(user, UserRoles.Admin);
+        //    }
+        //    if (await _roleManager.RoleExistsAsync(UserRoles.User))
+        //    {
+        //        await _userManager.AddToRoleAsync(user, UserRoles.User);
+        //    }
 
-            return new SuccessResult("Admin created succesfully.");
-        }
+        //    return new SuccessResult("Admin created succesfully.");
+        //}
 
-        [ValidationAspect(typeof(RegisterValidation))]
-        public async Task<IResult> RegisterAssistant([FromBody] RegisterModel model)
-        {
-            var userExists = await _userManager.FindByNameAsync(model.Username);
-            if (userExists != null)
-                return new ErrorResult("User already exists.");
+        //[ValidationAspect(typeof(RegisterValidation))]
+        //public async Task<IResult> RegisterAssistant([FromBody] RegisterModel model)
+        //{
+        //    var userExists = await _userManager.FindByNameAsync(model.Username);
+        //    if (userExists != null)
+        //        return new ErrorResult("User already exists.");
 
-            ApplicationUser user = new()
-            {
-                Email = model.Email,
-                SecurityStamp = Guid.NewGuid().ToString(),
-                UserName = model.Username
-            };
+        //    ApplicationUser user = new()
+        //    {
+        //        Email = model.Email,
+        //        SecurityStamp = Guid.NewGuid().ToString(),
+        //        UserName = model.Username
+        //    };
 
-            var result = await _userManager.CreateAsync(user, model.Password);
+        //    var result = await _userManager.CreateAsync(user, model.Password);
 
-            if (!result.Succeeded)
-            {
-                string errorMessage = string.Empty;
-                foreach (var error in result.Errors)
-                {
-                    errorMessage += error.Description;
-                }
-                return new ErrorResult(errorMessage);
-            }
+        //    if (!result.Succeeded)
+        //    {
+        //        string errorMessage = string.Empty;
+        //        foreach (var error in result.Errors)
+        //        {
+        //            errorMessage += error.Description;
+        //        }
+        //        return new ErrorResult(errorMessage);
+        //    }
 
-            if (await _roleManager.RoleExistsAsync(UserRoles.Assistant))
-            {
-                await _userManager.AddToRoleAsync(user, UserRoles.Assistant);
-            }
+        //    if (await _roleManager.RoleExistsAsync(UserRoles.Assistant))
+        //    {
+        //        await _userManager.AddToRoleAsync(user, UserRoles.Assistant);
+        //    }
 
-            return new SuccessResult("User assistant created succesfully.");
-            throw new NotImplementedException();
-        }
+        //    return new SuccessResult("User assistant created succesfully.");
+        //    throw new NotImplementedException();
+        //}
 
         public async Task<IResult> Revoke(string username)
         {

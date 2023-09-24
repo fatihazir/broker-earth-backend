@@ -14,6 +14,7 @@
     <None Remove="CustomDataEntryObjects\" />
     <None Remove="CustomDataEntryObjects\Ship\" />
     <None Remove="CustomDataEntryObjects\Load\" />
+    <None Remove="CustomDataEntryObjects\Broker\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -31,5 +32,6 @@
     <Folder Include="CustomDataEntryObjects\" />
     <Folder Include="CustomDataEntryObjects\Ship\" />
     <Folder Include="CustomDataEntryObjects\Load\" />
+    <Folder Include="CustomDataEntryObjects\Broker\" />
   </ItemGroup>
 </Project>

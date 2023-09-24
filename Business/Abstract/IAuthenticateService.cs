@@ -14,8 +14,8 @@ namespace Business.Abstract
     {
         public Task<IResult> Login([FromBody] LoginModel model);
         public Task<IResult> RegisterUser([FromBody] UserRegisterValidationObject model);
-        public Task<IResult> RegisterAssistant([FromBody] RegisterModel model);
-        public Task<IResult> RegisterAdmin([FromBody] RegisterModel model);
+        //public Task<IResult> RegisterAssistant([FromBody] RegisterModel model);
+        //public Task<IResult> RegisterAdmin([FromBody] RegisterModel model);
         public Task<IResult> RefreshToken(TokenModel tokenModel);
         public Task<IResult> Revoke(string username);
         public Task<IResult> RevokeAll();

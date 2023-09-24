@@ -9,9 +9,7 @@ namespace Business.ValidationRules.FluentValidation
 		public UserRegisterValidation()
 		{
             RuleFor(r => r.Email).NotEmpty().EmailAddress();
-            RuleFor(r => r.Password).NotEmpty();
             RuleFor(r => r.Username).NotEmpty();
-			RuleFor(r => r.CompanyName).NotEmpty();
         }
 	}
 }

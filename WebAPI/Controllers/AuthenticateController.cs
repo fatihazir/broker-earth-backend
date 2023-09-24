@@ -58,6 +58,7 @@ namespace WebAPI.Controllers
             return BadRequest(result);
         }
 
+        [Authorize(Roles = "User, Admin")]
         [HttpPost]
         [Route("register-user")]
         public async Task<IActionResult> Register([FromBody] UserRegisterValidationObject model)
@@ -72,34 +73,34 @@ namespace WebAPI.Controllers
             return BadRequest(result);
         }
 
-        [Authorize(Roles = "User, Admin")]
-        [HttpPost]
-        [Route("register-assistant")]
-        public async Task<IActionResult> RegisterAssistant([FromBody] RegisterModel model)
-        {
-            var result = await _authenticateService.RegisterAssistant(model);
+        //[Authorize(Roles = "User, Admin")]
+        //[HttpPost]
+        //[Route("register-assistant")]
+        //public async Task<IActionResult> RegisterAssistant([FromBody] RegisterModel model)
+        //{
+        //    var result = await _authenticateService.RegisterAssistant(model);
 
-            if (result.Success)
-            {
-                return Ok(result);
-            }
+        //    if (result.Success)
+        //    {
+        //        return Ok(result);
+        //    }
 
-            return BadRequest(result);
-        }
+        //    return BadRequest(result);
+        //}
 
-        [Authorize(Roles = "Admin")]
-        [HttpPost]
-        [Route("register-admin")]
-        public async Task<IActionResult> RegisterAdmin([FromBody] RegisterModel model)
-        {
-            var result = await _authenticateService.RegisterAdmin(model);
-            if (result.Success)
-            {
-                return Ok(result);
-            }
+        //[Authorize(Roles = "Admin")]
+        //[HttpPost]
+        //[Route("register-admin")]
+        //public async Task<IActionResult> RegisterAdmin([FromBody] RegisterModel model)
+        //{
+        //    var result = await _authenticateService.RegisterAdmin(model);
+        //    if (result.Success)
+        //    {
+        //        return Ok(result);
+        //    }
 
-            return BadRequest(result);
-        }
+        //    return BadRequest(result);
+        //}
 
         [Authorize(Roles = "User, Admin")]
         [HttpDelete]
