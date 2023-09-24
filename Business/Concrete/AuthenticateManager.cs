@@ -15,6 +15,7 @@ using Core.Utilities.Security.JWT;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using Entities.CustomReturnObjects;
+using Entities.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -147,25 +148,20 @@ namespace Business.Concrete
                 return new ErrorResult(errorMessage);
             }
 
-
-            if (await _roleManager.RoleExistsAsync(UserRoles.User))
-            {
-                await _userManager.AddToRoleAsync(user, UserRoles.User);
-            }
-
             string mailBody = $"Username: {model.Email} {Environment.NewLine}Password: {autoCreatedPassword}";
             IResult mailResult = MailHelper.SendMail(model.Email, "Login Credentials", mailBody);
 
+            var createdUser = await _userManager.FindByNameAsync(model.Username);
+            UserInfoDto userInfoDto = new() {UserId = createdUser.Id, Username = createdUser.UserName, Email = createdUser.Email };
+
             if (mailResult.Success)
             {
-                return new SuccessResult("User created succesfully.");
+                return new SuccessDataResult<UserInfoDto>(userInfoDto, "User Succesfully created");
             }
             else
             {
                 return new ErrorResult(mailResult.Message);
             }
-
-           
         }
 
         //[ValidationAspect(typeof(RegisterValidation))]
