@@ -3,6 +3,7 @@ using System.Linq.Expressions;
 using Core.Utilities.Results;
 using DataAccess.PaginationAndFilter.Concrete;
 using Entities.Concrete;
+using Entities.CustomDataEntryObjects.Broker;
 
 namespace Business.Abstract
 {
@@ -10,6 +11,7 @@ namespace Business.Abstract
 	{
         public Task<IResult> GetBrokerStatisticsByUser();
         public Task<IResult> GetAll();
+        public Task<IResult> CreateBrokerAccount(CustomBrokerCreateObject customBrokerCreateObject);
     }
 }
 

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Business.Abstract;
 using DataAccess.PaginationAndFilter.Concrete;
+using Entities.CustomDataEntryObjects.Broker;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -51,7 +52,19 @@ namespace WebAPI.Controllers
             return BadRequest(result);
         }
 
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public async Task<IActionResult> CreateBroker(CustomBrokerCreateObject customBrokerCreateObject)
+        {
+            var result = await _brokerService.CreateBrokerAccount(customBrokerCreateObject);
 
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+
+            return BadRequest(result);
+        }
     }
 }
 

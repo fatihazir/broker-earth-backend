@@ -8,6 +8,7 @@ using Core.Utilities.Results;
 using DataAccess.Abstract;
 using DataAccess.PaginationAndFilter.Concrete;
 using Entities.Concrete;
+using Entities.CustomDataEntryObjects.Broker;
 using Entities.DTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -39,6 +40,15 @@ namespace Business.Concrete
         public async Task<IResult> GetAll()
         {
             return new SuccessDataResult<List<Broker>>(await _brokerDal.GetAll());
+        }
+
+        public async Task<IResult> CreateBrokerAccount(CustomBrokerCreateObject customBrokerCreateObject)
+        {
+            Broker newBroker = new() {
+                BrokerId = customBrokerCreateObject.BrokerId,
+                CompanyName = customBrokerCreateObject.CompanyName };
+
+            return new SuccessDataResult<Broker>(await _brokerDal.AddAndRetriveData(newBroker));
         }
     }
 }
