@@ -25,7 +25,6 @@ namespace Business.Concrete
 	{
         ILoadDal _loadDal;
         IBrokerDal _brokerDal;
-        private IHttpContextAccessor _httpContextAccessor;
         private readonly UserManager<ApplicationUser> _userManager;
        
 
@@ -33,7 +32,6 @@ namespace Business.Concrete
         {
             _loadDal = loadDal;
             _brokerDal = brokerDal;
-            _httpContextAccessor = ServiceTool.ServiceProvider.GetService<IHttpContextAccessor>();
             _userManager = userManager;
         }
 

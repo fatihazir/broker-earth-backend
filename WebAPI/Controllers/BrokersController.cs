@@ -2,11 +2,16 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Business.Abstract;
+using Business.Concrete;
+using Core.Entities.Concrete;
+using Core.Utilities.IoC;
 using DataAccess.PaginationAndFilter.Concrete;
 using Entities.CustomDataEntryObjects.Broker;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -18,10 +23,14 @@ namespace WebAPI.Controllers
     {
 
         private readonly IBrokerService _brokerService;
+        private IHttpContextAccessor _httpContextAccessor;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public BrokersController(IBrokerService brokerService)
+        public BrokersController(IBrokerService brokerService, UserManager<ApplicationUser> userManager)
         {
             _brokerService = brokerService;
+            _httpContextAccessor = ServiceTool.ServiceProvider.GetService<IHttpContextAccessor>();
+            _userManager = userManager;
         }
 
         [Authorize(Roles = "User, Admin")]
@@ -66,11 +75,28 @@ namespace WebAPI.Controllers
             return BadRequest(result);
         }
 
-        [Authorize(Roles = "User, Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpPost("assing-or-update-assistant")]
         public async Task<IActionResult> AssingAssistant(CustomAssistantCreateObject customAssistantCreateObject)
         {
             var result = await _brokerService.CreateAssistant(customAssistantCreateObject);
+
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+
+            return BadRequest(result);
+        }
+
+        [Authorize(Roles = "User")]
+        [HttpPost("assing-or-update-assistant-for-broker-owner")]
+        public async Task<IActionResult> AssingAssistantForBrokerOwner(CustomAssistantCreateObject customAssistantCreateObject)
+        {
+            string? username = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Name);
+            ApplicationUser? user = await _userManager.FindByNameAsync(username);
+
+            var result = await _brokerService.CreateAssistantForBrokerOwner(customAssistantCreateObject, user);
 
             if (result.Success)
             {

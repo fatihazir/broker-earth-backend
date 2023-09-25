@@ -28,14 +28,12 @@ namespace Business.Concrete
     {
         IShipDal _shipDal;
         IBrokerDal _brokerDal;
-        private IHttpContextAccessor _httpContextAccessor;
         private readonly UserManager<ApplicationUser> _userManager;
      
         public ShipManager(IShipDal shipDal, IBrokerDal brokerDal, UserManager<ApplicationUser> userManager)
         {
             _shipDal = shipDal;
             _brokerDal = brokerDal;
-            _httpContextAccessor = ServiceTool.ServiceProvider.GetService<IHttpContextAccessor>();
             _userManager = userManager;
         }
 
