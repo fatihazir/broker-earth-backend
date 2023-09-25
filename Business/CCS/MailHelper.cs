@@ -9,8 +9,8 @@ namespace Business.CCS
 	{
 		public static IResult SendMail(string receiverMail, string subject, string body)
 		{
-            string senderMailAddress = "fatih@poseisoft.com";
-            string senderMailPassword = "FatihPassword35..";
+            string senderMailAddress = "info@poseisoft.com";
+            string senderMailPassword = "PoseisoftInfo35..";
 
             string smptLink = "smtppro.zoho.eu";
             int smtpPort = 587;
