@@ -77,8 +77,8 @@ namespace Business.Concrete
             if (usersBroker is null)
                 return new ErrorResult("Your broker account does not exist.");
 
-            if (usersBroker.Id != customAssistantCreateObject.CompanyId || user.Id != usersBroker.BrokerId)
-                return new ErrorResult("You are not authorized to achive this task since you are not in charge in this broker company");
+            if (usersBroker.Id != customAssistantCreateObject.CompanyId)
+                return new ErrorResult("You are not authorized to achive this task since you are not in charge in this broker company.");
 
             return await CreateAssistant(customAssistantCreateObject);
 
