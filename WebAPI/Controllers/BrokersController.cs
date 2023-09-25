@@ -53,10 +53,24 @@ namespace WebAPI.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        [HttpPost]
+        [HttpPost("create-broker")]
         public async Task<IActionResult> CreateBroker(CustomBrokerCreateObject customBrokerCreateObject)
         {
             var result = await _brokerService.CreateBrokerAccount(customBrokerCreateObject);
+
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+
+            return BadRequest(result);
+        }
+
+        [Authorize(Roles = "User, Admin")]
+        [HttpPost("assing-or-update-assistant")]
+        public async Task<IActionResult> AssingAssistant(CustomAssistantCreateObject customAssistantCreateObject)
+        {
+            var result = await _brokerService.CreateAssistant(customAssistantCreateObject);
 
             if (result.Success)
             {

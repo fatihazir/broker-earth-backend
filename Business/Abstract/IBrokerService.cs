@@ -12,6 +12,7 @@ namespace Business.Abstract
         public Task<IResult> GetBrokerStatisticsByUser();
         public Task<IResult> GetAll();
         public Task<IResult> CreateBrokerAccount(CustomBrokerCreateObject customBrokerCreateObject);
+        public Task<IResult> CreateAssistant(CustomAssistantCreateObject customAssistantCreateObject);
     }
 }
 

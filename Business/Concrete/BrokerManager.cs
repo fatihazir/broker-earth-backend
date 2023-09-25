@@ -48,7 +48,26 @@ namespace Business.Concrete
                 BrokerId = customBrokerCreateObject.BrokerId,
                 CompanyName = customBrokerCreateObject.CompanyName };
 
-            return new SuccessDataResult<Broker>(await _brokerDal.AddAndRetriveData(newBroker));
+            return new SuccessDataResult<Broker>(await _brokerDal.AddAndRetriveData(newBroker), "A new broker company has initialized.");
+        }
+
+        public async Task<IResult> CreateAssistant(CustomAssistantCreateObject customAssistantCreateObject)
+        {
+            Broker brokerToBeUpdated = await _brokerDal.Get(b => b.Id == customAssistantCreateObject.CompanyId);
+
+            if (brokerToBeUpdated is null)
+                return new ErrorResult("Broker company does not exist.");
+
+            var tempAssistantUser = await _userManager.FindByIdAsync(customAssistantCreateObject.AssistantId);
+
+            if (tempAssistantUser is null)
+                return new ErrorResult("User does not exist.");
+
+            brokerToBeUpdated.AssistantId = customAssistantCreateObject.AssistantId;
+
+            await _brokerDal.Update(brokerToBeUpdated);
+
+            return new SuccessDataResult<Broker>(brokerToBeUpdated, $"A new assistant has assigned to the broker company named: {brokerToBeUpdated.CompanyName}");
         }
     }
 }
