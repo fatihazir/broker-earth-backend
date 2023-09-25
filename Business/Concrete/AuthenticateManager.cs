@@ -148,7 +148,9 @@ namespace Business.Concrete
                 return new ErrorResult(errorMessage);
             }
 
-            string mailBody = $"Username: {model.Email} {Environment.NewLine}Password: {autoCreatedPassword}";
+            var newUser = await _userManager.FindByNameAsync(model.Username);
+
+            string mailBody = $"Id: {newUser.Id} {Environment.NewLine}Username: {model.Email} {Environment.NewLine}Password: {autoCreatedPassword}";
             IResult mailResult = MailHelper.SendMail(model.Email, "Login Credentials", mailBody);
 
             var createdUser = await _userManager.FindByNameAsync(model.Username);
