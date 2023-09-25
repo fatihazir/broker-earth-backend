@@ -29,12 +29,9 @@ namespace Business.Concrete
             _userManager = userManager;
         }
 
-        public async Task<IResult> GetBrokerStatisticsByUser()
+        public async Task<IResult> GetBrokerStatisticsByUser(string userId)
         {
-            string? username = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Name);
-            ApplicationUser? user = await _userManager.FindByNameAsync(username);
-
-            return new SuccessDataResult<BrokerStatisticsDto>(await _brokerDal.GetBrokerStatisticsByUser(user.Id));
+            return new SuccessDataResult<BrokerStatisticsDto>(await _brokerDal.GetBrokerStatisticsByUser(userId));
         }
 
         public async Task<IResult> GetAll()

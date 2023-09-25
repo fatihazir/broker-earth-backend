@@ -10,7 +10,7 @@ namespace Business.Abstract
 {
 	public interface IBrokerService
 	{
-        public Task<IResult> GetBrokerStatisticsByUser();
+        public Task<IResult> GetBrokerStatisticsByUser(string userId);
         public Task<IResult> GetAll();
         public Task<IResult> CreateBrokerAccount(CustomBrokerCreateObject customBrokerCreateObject);
         public Task<IResult> CreateAssistant(CustomAssistantCreateObject customAssistantCreateObject);

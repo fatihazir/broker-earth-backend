@@ -37,7 +37,10 @@ namespace WebAPI.Controllers
         [HttpGet("statistics")]
         public async Task<IActionResult> GetStatistics()
         {
-            var result = await _brokerService.GetBrokerStatisticsByUser();
+            string? username = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Name);
+            ApplicationUser? user = await _userManager.FindByNameAsync(username);
+
+            var result = await _brokerService.GetBrokerStatisticsByUser(user.Id);
 
             if (result.Success)
             {
