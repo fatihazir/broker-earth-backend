@@ -79,8 +79,8 @@ namespace WebAPI.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        [HttpPost("assing-or-update-assistant")]
-        public async Task<IActionResult> AssingAssistant(CustomAssistantCreateObject customAssistantCreateObject)
+        [HttpPost("assign-or-update-assistant")]
+        public async Task<IActionResult> AssingAssistant([FromBody] CustomAssistantCreateObject customAssistantCreateObject)
         {
             var result = await _brokerService.CreateAssistant(customAssistantCreateObject);
 
@@ -93,8 +93,8 @@ namespace WebAPI.Controllers
         }
 
         [Authorize(Roles = "User")]
-        [HttpPost("assing-or-update-assistant-for-broker-owner")]
-        public async Task<IActionResult> AssingAssistantForBrokerOwner(CustomAssistantCreateObject customAssistantCreateObject)
+        [HttpPost("assign-or-update-assistant-for-broker-owner")]
+        public async Task<IActionResult> AssingAssistantForBrokerOwner([FromBody] CustomAssistantCreateObject customAssistantCreateObject)
         {
             string? username = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Name);
             ApplicationUser? user = await _userManager.FindByNameAsync(username);

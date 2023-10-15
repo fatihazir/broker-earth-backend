@@ -6,14 +6,14 @@ namespace Core.Utilities.Results
         public T Data { get; }
         public int CurrentPage { get; set; }
         public int Pages { get; set; }
-        public int EntityAmount { get; set; }
+        public int TotalEntityAmount { get; set; }
 
-        public PaginatedResultObject(T data, int currentPage, int pages, int entityAmount)
+        public PaginatedResultObject(T data, int currentPage, int pages, int totalEntityAmount)
         {
             Data = data;
             CurrentPage = currentPage;
             Pages = pages;
-            EntityAmount = entityAmount;
+            TotalEntityAmount = totalEntityAmount;
         }
 
         public PaginatedResultObject(T data, int currentPage, int pages)
@@ -21,7 +21,7 @@ namespace Core.Utilities.Results
             Data = data;
             CurrentPage = currentPage;
             Pages = pages;
-            EntityAmount = 0;
+            TotalEntityAmount = 0;
         }
 
         public PaginatedResultObject()
