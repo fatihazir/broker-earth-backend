@@ -13,7 +13,7 @@ namespace DataAccess.Concrete.EntityFramework
 {
     public class EfAspNetUserDal : EfEntityRepositoryBase<AspNetUser, BrokerContext>, IAspNetUserDal
     {
-        public async Task<List<AllUsersDto>> GetAllUsersPaginatedAndFiltered(UserPaginationAndFilterObject paginationAndFilter, float pageResult)
+        public async Task<Tuple<List<AllUsersDto>, int>> GetAllUsersPaginatedAndFiltered(UserPaginationAndFilterObject paginationAndFilter, float pageResult)
         {
             using (BrokerContext brokerContext = new())
             {
@@ -23,6 +23,8 @@ namespace DataAccess.Concrete.EntityFramework
                     var UserData = await applicationDbContext.Users.ToListAsync();
 
                     var UserQuery = UserData.Where(u => u.Email.Contains(paginationAndFilter.SearchQuery) || u.UserName.Contains(paginationAndFilter.SearchQuery));
+
+                    int userAmount = UserQuery.Count();
 
                     if(paginationAndFilter.All != true)
                     {
@@ -83,8 +85,8 @@ namespace DataAccess.Concrete.EntityFramework
                             });
                         }
                     }
-                    
-                    return resultsWithBroker;
+
+                    return Tuple.Create(resultsWithBroker, userAmount);
                 }
             }
         }
@@ -105,6 +107,7 @@ namespace DataAccess.Concrete.EntityFramework
                 };
             }
         }
+
     }
 
 }

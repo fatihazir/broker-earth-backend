@@ -43,7 +43,9 @@ namespace Business.Concrete
             var pageResults = 10f;
             var pageCount = Math.Ceiling(_userManager.Users.Count() / pageResults);
             var result = await _aspNetUserDal.GetAllUsersPaginatedAndFiltered(paginationAndFilter, pageResults);
-            return new PaginatedSuccessDataResult<List<AllUsersDto>>(result, paginationAndFilter.Page, (int)pageCount);
+            var structuredResult = new PaginatedResultObject<List<AllUsersDto>>(result.Item1, paginationAndFilter.Page, (int)pageCount, result.Item2);
+            return new PaginatedSuccessDataResult<PaginatedResultObject<List<AllUsersDto>>>(structuredResult);
+
         }
     }
 }

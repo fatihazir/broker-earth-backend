@@ -77,7 +77,8 @@ namespace Business.Concrete
             var pageCount = Math.Ceiling(await _loadDal.GetCountOfLoads(dbFilter) / pageResults);
 
             List<Load> loads = await _loadDal.GetLoadsPaginatedAndFiltered(paginationAndFilter, pageResults, dbFilter);
-            return new PaginatedSuccessDataResult<List<Load>>(loads, paginationAndFilter.Page, (int)pageCount);
+            var structuredResult = new PaginatedResultObject<List<Load>>(loads, paginationAndFilter.Page, (int)pageCount);
+            return new PaginatedSuccessDataResult<PaginatedResultObject<List<Load>>>(structuredResult);
         }
 
         [ValidationAspect(typeof(LoadAddValidation))]

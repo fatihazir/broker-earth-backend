@@ -79,7 +79,8 @@ namespace Business.Concrete
             var pageCount = Math.Ceiling(await _shipDal.GetCountOfShips(dbFilter) / pageResults);
 
             List<Ship> ships = await _shipDal.GetShipsPaginatedAndFiltered(paginationAndFilter, pageResults, dbFilter);
-            return new PaginatedSuccessDataResult<List<Ship>>(ships, paginationAndFilter.Page, (int)pageCount);
+            var structuredResult = new PaginatedResultObject<List<Ship>>(ships, paginationAndFilter.Page, (int)pageCount);
+            return new PaginatedSuccessDataResult<PaginatedResultObject<List<Ship>>>(structuredResult);
         }
 
         [ValidationAspect(typeof(ShipAddValidation))]

@@ -11,8 +11,10 @@ using DataAccess.Abstract;
 using DataAccess.Concrete.EntityFramework;
 using DataAccess.PaginationAndFilter.Concrete;
 using Entities.Concrete;
+using Entities.DTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Business.Concrete
@@ -74,7 +76,8 @@ namespace Business.Concrete
             var pageCount = Math.Ceiling(await _contactUsFormDal.GetCountOfContactUsForms(dbFilter) / pageResults);
 
             List<ContactUsForm> contactUsForms = await _contactUsFormDal.GetContactUsFormsPaginatedAndFiltered(contactUsFormPaginationAndFilterObject, pageResults, dbFilter);
-            return new PaginatedSuccessDataResult<List<ContactUsForm>>(contactUsForms, contactUsFormPaginationAndFilterObject.Page, (int)pageCount);
+            var structuredResult = new PaginatedResultObject<List<ContactUsForm>>(contactUsForms, contactUsFormPaginationAndFilterObject.Page, (int)pageCount);
+            return new PaginatedSuccessDataResult<PaginatedResultObject<List<ContactUsForm>>>(structuredResult);
         }
     }
 }

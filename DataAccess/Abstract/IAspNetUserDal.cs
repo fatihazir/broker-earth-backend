@@ -12,7 +12,8 @@ namespace DataAccess.Abstract
 	public interface IAspNetUserDal : IEntityRepository<AspNetUser>
     {
 		public Task<UserInfoDto> GetUserPersonalInformation(ApplicationUser user);
-        public Task<List<AllUsersDto>> GetAllUsersPaginatedAndFiltered(UserPaginationAndFilterObject paginationAndFilter, float pageResult);
+        public Task<Tuple<List<AllUsersDto>,int>> GetAllUsersPaginatedAndFiltered(UserPaginationAndFilterObject paginationAndFilter, float pageResult);
+        
     }
 }
 
