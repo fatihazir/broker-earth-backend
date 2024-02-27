@@ -41,8 +41,8 @@ namespace Business.Concrete
         public async Task<IResult> GetAllUsers(UserPaginationAndFilterObject paginationAndFilter)
         {
             var pageResults = 10f;
-            var pageCount = Math.Ceiling(_userManager.Users.Count() / pageResults);
             var result = await _aspNetUserDal.GetAllUsersPaginatedAndFiltered(paginationAndFilter, pageResults);
+            var pageCount = Math.Ceiling(result.Item2 / pageResults);
             var structuredResult = new PaginatedResultObject<List<AllUsersDto>>(result.Item1, paginationAndFilter.Page, (int)pageCount, result.Item2);
             return new PaginatedSuccessDataResult<PaginatedResultObject<List<AllUsersDto>>>(structuredResult);
 
