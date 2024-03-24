@@ -40,6 +40,8 @@ namespace Business.DependencyResolvers.AutoFac
             builder.RegisterType<ContactUsFormManager>().As<IContactUsFormService>();
             builder.RegisterType<EfContactUsFormDal>().As<IContactUsFormDal>();
 
+            builder.RegisterType<MatchManager>().As<IMatchService>();
+
             var assembly = System.Reflection.Assembly.GetExecutingAssembly();
 
             builder.RegisterAssemblyTypes(assembly).AsImplementedInterfaces()

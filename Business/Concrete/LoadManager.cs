@@ -130,6 +130,8 @@ namespace Business.Concrete
                 loadToBeUpdated.Description = customLoadUpdateObject.Description;
                 loadToBeUpdated.Latitude = customLoadUpdateObject.Latitude;
                 loadToBeUpdated.Longtitude = customLoadUpdateObject.Longtitude;
+                loadToBeUpdated.LayCanFrom = customLoadUpdateObject.LayCanFrom;
+                loadToBeUpdated.LayCanTo = customLoadUpdateObject.LayCanTo;
 
                 await _loadDal.Update(loadToBeUpdated);
                 return new SuccessResult("Load updated");

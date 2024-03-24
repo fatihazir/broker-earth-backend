@@ -54,9 +54,9 @@ namespace Business.Concrete
             distances.Sort((x, y) => x.Item2.CompareTo(y.Item2));
 
             // Sıralı yükleri alıyoruz
-            var sortedLoads = distances.Select(distance => distance.Item1).ToList();
+            List<Load> sortedLoads = distances.Select(distance => distance.Item1).ToList();
 
-            throw new NotImplementedException();
+            return new SuccessDataResult<List<Load>>(sortedLoads);
         }
 
         public async Task<IResult> GetAvailableShipsForLoad(int loadId, ApplicationUser user)
@@ -74,8 +74,8 @@ namespace Business.Concrete
             var dbFilter = PredicateBuilder.True<Ship>();
             dbFilter = dbFilter.And(s => s.BrokerId == usersBroker.Id);
             dbFilter = dbFilter.And(s => s.IsDeleted == false);
-            dbFilter = dbFilter.And(s => s.DeadWeight >= load.LoadWeight);
-            dbFilter = dbFilter.And(s => s.AvailableFrom <= load.LayCanFrom && s.AvailableFrom >= load.LayCanTo);
+            dbFilter = dbFilter.And(s => s.DeadWeight * (1 + s.ConfidenceInterval) >= load.LoadWeight);
+            dbFilter = dbFilter.And(s => s.AvailableFrom >= load.LayCanFrom && s.AvailableFrom <= load.LayCanTo);
 
             List<Ship> ships = await _shipDal.GetAll(dbFilter);
 
@@ -86,9 +86,9 @@ namespace Business.Concrete
             distances.Sort((x, y) => x.Item2.CompareTo(y.Item2));
 
             // Sıralı gemileri al
-            var sortedShips = distances.Select(distance => distance.Item1).ToList();
+            List<Ship> sortedShips = distances.Select(distance => distance.Item1).ToList();
 
-            throw new NotImplementedException();
+            return new SuccessDataResult<List<Ship>>(sortedShips);
         }
 
 
